@@ -9,17 +9,15 @@ namespace GymLab.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Ratings",
+                name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Evaluation = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Describtion = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -34,32 +32,33 @@ namespace GymLab.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Workout = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Score = table.Column<double>(type: "float", nullable: false),
-                    RatingId = table.Column<int>(type: "int", nullable: false)
+                    CategoryName = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SportPrograms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SportPrograms_Ratings_RatingId",
-                        column: x => x.RatingId,
-                        principalTable: "Ratings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_SportPrograms_Categories_CategoryName",
+                        column: x => x.CategoryName,
+                        principalTable: "Categories",
+                        principalColumn: "Name");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Ratings",
                 columns: table => new
                 {
-                    Categories = table.Column<int>(type: "int", nullable: false),
-                    Describtion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Evaluation = table.Column<int>(type: "int", nullable: false),
                     SportProgramId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Categories);
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_SportPrograms_SportProgramId",
+                        name: "FK_Ratings_SportPrograms_SportProgramId",
                         column: x => x.SportProgramId,
                         principalTable: "SportPrograms",
                         principalColumn: "Id",
@@ -67,26 +66,26 @@ namespace GymLab.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_SportProgramId",
-                table: "Categories",
+                name: "IX_Ratings_SportProgramId",
+                table: "Ratings",
                 column: "SportProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SportPrograms_RatingId",
+                name: "IX_SportPrograms_CategoryName",
                 table: "SportPrograms",
-                column: "RatingId");
+                column: "CategoryName");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Ratings");
 
             migrationBuilder.DropTable(
                 name: "SportPrograms");
 
             migrationBuilder.DropTable(
-                name: "Ratings");
+                name: "Categories");
         }
     }
 }

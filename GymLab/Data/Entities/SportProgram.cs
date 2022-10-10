@@ -9,7 +9,7 @@
         public string Description { get; set; }
         public string Workout { get; set; }
         public double Score { get; set; }
-        public Rating Rating { get; set; }
+        public Category Category { get; set; }
     }
     public enum Type
     {

@@ -1,4 +1,6 @@
-﻿using GymLab.Data.Entities;
+﻿using GymLab.Data.Dtos;
+using GymLab.Data.Entities;
+using GymLab.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymLab.Data.Repositories
@@ -7,6 +9,7 @@ namespace GymLab.Data.Repositories
     {
         Task<Category?> GetAsync(string categoryName);
         Task<IReadOnlyList<Category>> GetManyAsync();
+        Task<PagedList<Category>> GetManyAsync(CategorySearchParameters searchParameters);
         Task CreateAsync(Category category);
         Task UpdateAsync(Category category);
         Task DeleteAsync(Category category);
@@ -26,9 +29,15 @@ namespace GymLab.Data.Repositories
             return await _forumDbContext.Categories.FirstOrDefaultAsync(x => x.Name == categoryName);
         }
 
-        public async Task<IReadOnlyList<Category>> GetManyAsync() 
+        public async Task<IReadOnlyList<Category>> GetManyAsync()
         {
             return await _forumDbContext.Categories.ToListAsync();
+        }
+
+        public async Task<PagedList<Category>> GetManyAsync(CategorySearchParameters searchParameters) 
+        {
+            var queryable = _forumDbContext.Categories.AsQueryable().OrderBy(x => x.Name);
+            return await PagedList<Category>.CreateAsync(queryable, searchParameters.PageNumber, searchParameters.PageSize);
         }
 
         public async Task CreateAsync(Category category)

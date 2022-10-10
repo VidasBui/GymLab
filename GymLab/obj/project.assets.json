@@ -2018,11 +2018,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Vidas\\Desktop\\G\\GymLab\\GymLab.csproj",
+      "projectUniqueName": "C:\\Users\\Vidas\\Desktop\\GymLab\\GymLab\\GymLab.csproj",
       "projectName": "GymLab",
-      "projectPath": "C:\\Users\\Vidas\\Desktop\\G\\GymLab\\GymLab.csproj",
+      "projectPath": "C:\\Users\\Vidas\\Desktop\\GymLab\\GymLab\\GymLab.csproj",
       "packagesPath": "C:\\Users\\Vidas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Vidas\\Desktop\\G\\GymLab\\obj\\",
+      "outputPath": "C:\\Users\\Vidas\\Desktop\\GymLab\\GymLab\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

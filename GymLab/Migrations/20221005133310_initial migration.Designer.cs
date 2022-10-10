@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymLab.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20221004085832_initial migration")]
+    [Migration("20221005133310_initial migration")]
     partial class initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,19 +25,14 @@ namespace GymLab.Migrations
 
             modelBuilder.Entity("GymLab.Data.Entities.Category", b =>
                 {
-                    b.Property<int>("Categories")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Describtion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SportProgramId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Categories");
-
-                    b.HasIndex("SportProgramId");
+                    b.HasKey("Name");
 
                     b.ToTable("Categories");
                 });
@@ -56,7 +51,12 @@ namespace GymLab.Migrations
                     b.Property<int>("Evaluation")
                         .HasColumnType("int");
 
+                    b.Property<int>("SportProgramId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SportProgramId");
 
                     b.ToTable("Ratings");
                 });
@@ -69,6 +69,9 @@ namespace GymLab.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -77,9 +80,6 @@ namespace GymLab.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Intensity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RatingId")
                         .HasColumnType("int");
 
                     b.Property<double>("Score")
@@ -94,12 +94,12 @@ namespace GymLab.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RatingId");
+                    b.HasIndex("CategoryName");
 
                     b.ToTable("SportPrograms");
                 });
 
-            modelBuilder.Entity("GymLab.Data.Entities.Category", b =>
+            modelBuilder.Entity("GymLab.Data.Entities.Rating", b =>
                 {
                     b.HasOne("GymLab.Data.Entities.SportProgram", "SportProgram")
                         .WithMany()
@@ -112,13 +112,11 @@ namespace GymLab.Migrations
 
             modelBuilder.Entity("GymLab.Data.Entities.SportProgram", b =>
                 {
-                    b.HasOne("GymLab.Data.Entities.Rating", "Rating")
+                    b.HasOne("GymLab.Data.Entities.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryName");
 
-                    b.Navigation("Rating");
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

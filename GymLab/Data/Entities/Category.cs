@@ -8,7 +8,6 @@ namespace GymLab.Data.Entities
         [Key]
         public string Name { get; set; }
         public string Describtion { get; set; }
-        public SportProgram SportProgram { get; set; } 
     }
 
 }

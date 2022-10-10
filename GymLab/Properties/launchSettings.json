@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "DemoRestSimonas": {
+    "GymLab": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

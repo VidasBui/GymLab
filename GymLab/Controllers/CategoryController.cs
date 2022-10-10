@@ -1,7 +1,9 @@
-﻿using GymLab.Data.Dtos;
+﻿using GymLab.Data;
+using GymLab.Data.Dtos;
 using GymLab.Data.Entities;
 using GymLab.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace GymLab.Controllers
 {
@@ -16,22 +18,54 @@ namespace GymLab.Controllers
             _categoriesRepository = categoriesRepository;
         }
 
-        [HttpGet]
+        //[HttpGet]
         public async Task<IEnumerable<CategoryDto>> GetMany() 
         {
             var categories = await _categoriesRepository.GetManyAsync();
+
             return categories.Select(x => new CategoryDto(x.Name, x.Describtion));
         }
 
-        [HttpGet]
-        [Route("{categoryName}", Name = "GetCategory")]
-        public async Task<ActionResult<CategoryDto>> Get(string categoryName)
+        [HttpGet(Name = "GetCategories")]
+        public async Task<IEnumerable<CategoryDto>> GetManyPaging([FromQuery] CategorySearchParameters searchParameters)
+        {
+            var categories = await _categoriesRepository.GetManyAsync(searchParameters);
+
+            var previousPageLink = categories.HasPrevious ? 
+                CreateCategoriesResourceUri(searchParameters, ResourceUriType.PreviousPage) :
+                null;
+
+            var nextPageLink = categories.HasNext ?
+                CreateCategoriesResourceUri(searchParameters, ResourceUriType.NextPage) :
+                null;
+
+            var paginationMetadata = new
+            {
+                totalCount = categories.TotalCount,
+                pageSize = categories.PageSize,
+                currentPage = categories.CurrentPage,
+                totalPages = categories.TotalPages,
+                previousPageLink,
+                nextPageLink
+            };
+
+            Response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationMetadata));
+
+            return categories.Select(x => new CategoryDto(x.Name, x.Describtion));
+        }
+
+        [HttpGet("{categoryName}", Name = "GetCategory")]
+        public async Task<IActionResult> Get(string categoryName)
         {
             var category = await _categoriesRepository.GetAsync(categoryName);
 
             if (category == null)
                 return NotFound();//404
-            return new CategoryDto(category.Name, category.Describtion);
+
+            var links = CreateLinksForCategory(categoryName);
+            var categoryDto =  new CategoryDto(category.Name, category.Describtion);
+
+            return Ok (new { Resource = categoryDto, Links = links } );
         }
 
         [HttpPost]
@@ -41,9 +75,7 @@ namespace GymLab.Controllers
             await _categoriesRepository.CreateAsync(category);
 
             //201
-            return CreatedAtAction("GetCategory",
-                new {categoryName = category.Name}, 
-                new CategoryDto(category.Name, category.Describtion));
+            return Created ("", new CategoryDto(category.Name, category.Describtion));
         }
 
         [HttpPut]
@@ -61,8 +93,7 @@ namespace GymLab.Controllers
             return Ok(new CategoryDto(category.Name, category.Describtion));
         }
 
-        [HttpDelete]
-        [Route("{categoryName}")]
+        [HttpDelete("{categoryName}", Name = "DeleteCategory")]
         public async Task<ActionResult> Remove(string categoryName)
         {
             var category = await _categoriesRepository.GetAsync(categoryName);
@@ -73,6 +104,34 @@ namespace GymLab.Controllers
             await _categoriesRepository.DeleteAsync(category);
 
             return NoContent();//204
+        }
+
+        private string? CreateCategoriesResourceUri(CategorySearchParameters searchParameters, ResourceUriType type)
+        {
+            return type switch
+            {
+                ResourceUriType.PreviousPage => Url.Link("GetCategories", new
+                {
+                    pageNumber = searchParameters.PageNumber - 1,
+                    pageSize = searchParameters.PageSize,
+                }),
+                ResourceUriType.NextPage => Url.Link("GetCategories", new
+                {
+                    pageNumber = searchParameters.PageNumber + 1,
+                    pageSize = searchParameters.PageSize,
+                }),
+                _ => Url.Link("GetCategories", new
+                {
+                    pageNumber = searchParameters.PageNumber,
+                    pageSize = searchParameters.PageSize,
+                })
+            };
+        }
+
+        private IEnumerable<LinkDto> CreateLinksForCategory(string categoryName)
+        {
+            yield return new LinkDto { Href = Url.Link("GetCategory", new { categoryName }), Rel = "self", Method = "GET" };
+            yield return new LinkDto { Href = Url.Link("DeleteCategory", new { categoryName }), Rel = "delete_topic", Method = "DELETE" };
         }
 
     }

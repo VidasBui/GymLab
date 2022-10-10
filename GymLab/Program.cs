@@ -1,5 +1,5 @@
 using GymLab.Data;
-//using GymLab.Data.Repositories;
+using GymLab.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ForumDbContext>();//for sql generation
-//builder.Services.AddTransient<ITopicsRepository, TopicsRepository>();
+builder.Services.AddTransient<ICategoriesRepository, CategoriesRepository>();
 
 var app = builder.Build();
 
