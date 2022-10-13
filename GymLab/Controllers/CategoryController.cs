@@ -18,7 +18,7 @@ namespace GymLab.Controllers
             _categoriesRepository = categoriesRepository;
         }
 
-        //[HttpGet]
+        [HttpGet]
         public async Task<IEnumerable<CategoryDto>> GetMany() 
         {
             var categories = await _categoriesRepository.GetManyAsync();
@@ -26,7 +26,7 @@ namespace GymLab.Controllers
             return categories.Select(x => new CategoryDto(x.Name, x.Describtion));
         }
 
-        [HttpGet(Name = "GetCategories")]
+        /*[HttpGet(Name = "GetCategories")]
         public async Task<IEnumerable<CategoryDto>> GetManyPaging([FromQuery] CategorySearchParameters searchParameters)
         {
             var categories = await _categoriesRepository.GetManyAsync(searchParameters);
@@ -52,9 +52,9 @@ namespace GymLab.Controllers
             Response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationMetadata));
 
             return categories.Select(x => new CategoryDto(x.Name, x.Describtion));
-        }
+        }*/
 
-        [HttpGet("{categoryName}", Name = "GetCategory")]
+        [HttpGet("{categoryName}"/*, Name = "GetCategory"*/)]
         public async Task<IActionResult> Get(string categoryName)
         {
             var category = await _categoriesRepository.GetAsync(categoryName);
@@ -62,15 +62,18 @@ namespace GymLab.Controllers
             if (category == null)
                 return NotFound();//404
 
-            var links = CreateLinksForCategory(categoryName);
+            //var links = CreateLinksForCategory(categoryName);
             var categoryDto =  new CategoryDto(category.Name, category.Describtion);
 
-            return Ok (new { Resource = categoryDto, Links = links } );
+            return Ok (new { Resource = categoryDto/*, Links = links */} );
         }
 
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> Create(CreateCategoryDto dto)
         {
+            var c = await _categoriesRepository.GetAsync(dto.Name);
+            if (c != null) return BadRequest();//400
+
             var category = new Category { Name = dto.Name, Describtion = dto.Description };
             await _categoriesRepository.CreateAsync(category);
 
@@ -93,7 +96,7 @@ namespace GymLab.Controllers
             return Ok(new CategoryDto(category.Name, category.Describtion));
         }
 
-        [HttpDelete("{categoryName}", Name = "DeleteCategory")]
+        [HttpDelete("{categoryName}"/*, Name = "DeleteCategory"*/)]
         public async Task<ActionResult> Remove(string categoryName)
         {
             var category = await _categoriesRepository.GetAsync(categoryName);
@@ -106,7 +109,7 @@ namespace GymLab.Controllers
             return NoContent();//204
         }
 
-        private string? CreateCategoriesResourceUri(CategorySearchParameters searchParameters, ResourceUriType type)
+        /*private string? CreateCategoriesResourceUri(CategorySearchParameters searchParameters, ResourceUriType type)
         {
             return type switch
             {
@@ -132,7 +135,7 @@ namespace GymLab.Controllers
         {
             yield return new LinkDto { Href = Url.Link("GetCategory", new { categoryName }), Rel = "self", Method = "GET" };
             yield return new LinkDto { Href = Url.Link("DeleteCategory", new { categoryName }), Rel = "delete_topic", Method = "DELETE" };
-        }
+        }*/
 
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymLab.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20221005133310_initial migration")]
+    [Migration("20221013165446_initial migration")]
     partial class initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
