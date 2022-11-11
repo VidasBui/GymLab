@@ -1,9 +1,11 @@
-﻿using GymLab.Data.Entities;
+﻿using GymLab.Auth.Model;
+using GymLab.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymLab.Data
 {
-    public class ForumDbContext : DbContext
+    public class ForumDbContext : IdentityDbContext<ForumRestUser>
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<SportProgram> SportPrograms { get; set; }
