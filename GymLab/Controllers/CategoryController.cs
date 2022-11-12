@@ -1,8 +1,12 @@
-﻿using GymLab.Data;
+﻿using GymLab.Auth.Model;
+using GymLab.Data;
 using GymLab.Data.Dtos;
 using GymLab.Data.Entities;
 using GymLab.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace GymLab.Controllers
@@ -69,12 +73,18 @@ namespace GymLab.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = ForumRoles.Admin)]
         public async Task<ActionResult<CategoryDto>> Create(CreateCategoryDto dto)
         {
             var c = await _categoriesRepository.GetAsync(dto.Name);
             if (c != null) return BadRequest();//400
 
-            var category = new Category { Name = dto.Name, Describtion = dto.Description };
+            var category = new Category { 
+                Name = dto.Name, 
+                Describtion = dto.Description,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            };
+
             await _categoriesRepository.CreateAsync(category);
 
             //201
@@ -83,6 +93,7 @@ namespace GymLab.Controllers
 
         [HttpPut]
         [Route("{categoryName}")]
+        [Authorize(Roles = ForumRoles.Admin)]
         public async Task<ActionResult<CategoryDto>> Update(string categoryName, UpdateCategoryDto dto)
         {
             var category = await _categoriesRepository.GetAsync(categoryName);
@@ -97,6 +108,7 @@ namespace GymLab.Controllers
         }
 
         [HttpDelete("{categoryName}"/*, Name = "DeleteCategory"*/)]
+        [Authorize(Roles = ForumRoles.Admin)]
         public async Task<ActionResult> Remove(string categoryName)
         {
             var category = await _categoriesRepository.GetAsync(categoryName);

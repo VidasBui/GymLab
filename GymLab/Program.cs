@@ -33,8 +33,8 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters.ValidAudience = builder.Configuration["JwT:ValidAudience"];
-        options.TokenValidationParameters.ValidIssuer = builder.Configuration["JwT:ValidIssuer"];
+        options.TokenValidationParameters.ValidAudience = builder.Configuration["JWT:ValidAudience"];
+        options.TokenValidationParameters.ValidIssuer = builder.Configuration["JWT:ValidIssuer"];
         options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwT:Secret"]));
     });
 
@@ -43,6 +43,7 @@ builder.Services.AddTransient<ISportProgramsRepository, SportProgramsRepository>
 builder.Services.AddTransient<IRatingsRepository, RatingsRepository>();
 
 builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<AuthDbSeeder>();
 
 var app = builder.Build();
 
@@ -50,5 +51,8 @@ app.UseRouting();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
+
+var dbSeeder = app.Services.CreateScope().ServiceProvider.GetRequiredService<AuthDbSeeder>();
+await dbSeeder.SeedAsync();
 
 app.Run();
