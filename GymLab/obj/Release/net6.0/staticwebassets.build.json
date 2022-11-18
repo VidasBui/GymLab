@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "keyS/6XntxZClGZ3whJnGc8T1sAY6wnhiwuX4AEXHrw=",
+  "Source": "GymLab",
+  "BasePath": "_content/GymLab",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "GymLab\\wwwroot",
+      "Source": "GymLab",
+      "ContentRoot": "C:\\Users\\Vidas\\Desktop\\GymLab\\GymLab\\wwwroot\\",
+      "BasePath": "_content/GymLab",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

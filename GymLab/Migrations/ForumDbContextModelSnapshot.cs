@@ -124,9 +124,15 @@ namespace GymLab.Migrations
                     b.Property<int>("SportProgramId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SportProgramId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
                 });
@@ -158,6 +164,10 @@ namespace GymLab.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Workout")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -165,6 +175,8 @@ namespace GymLab.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryName");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SportPrograms");
                 });
@@ -307,7 +319,7 @@ namespace GymLab.Migrations
                     b.HasOne("GymLab.Auth.Model.ForumRestUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -318,10 +330,18 @@ namespace GymLab.Migrations
                     b.HasOne("GymLab.Data.Entities.SportProgram", "SportProgram")
                         .WithMany()
                         .HasForeignKey("SportProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GymLab.Auth.Model.ForumRestUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("SportProgram");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GymLab.Data.Entities.SportProgram", b =>
@@ -330,7 +350,15 @@ namespace GymLab.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryName");
 
+                    b.HasOne("GymLab.Auth.Model.ForumRestUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -338,7 +366,7 @@ namespace GymLab.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -347,7 +375,7 @@ namespace GymLab.Migrations
                     b.HasOne("GymLab.Auth.Model.ForumRestUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -356,7 +384,7 @@ namespace GymLab.Migrations
                     b.HasOne("GymLab.Auth.Model.ForumRestUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -365,13 +393,13 @@ namespace GymLab.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("GymLab.Auth.Model.ForumRestUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -380,7 +408,7 @@ namespace GymLab.Migrations
                     b.HasOne("GymLab.Auth.Model.ForumRestUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

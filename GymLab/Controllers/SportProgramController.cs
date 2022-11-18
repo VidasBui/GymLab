@@ -1,8 +1,12 @@
-﻿using GymLab.Data;
+﻿using GymLab.Auth.Model;
+using GymLab.Data;
 using GymLab.Data.Dtos;
 using GymLab.Data.Entities;
 using GymLab.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Xml;
 
@@ -13,9 +17,12 @@ namespace GymLab.Controllers
     public class SportProgramController : ControllerBase
     {
         private readonly ISportProgramsRepository _programsRepository;
-        public SportProgramController(ISportProgramsRepository programsRepository)
+        private readonly IAuthorizationService _authorizationService;
+
+        public SportProgramController(ISportProgramsRepository programsRepository, IAuthorizationService authorizationService)
         {
             _programsRepository = programsRepository;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -69,9 +76,18 @@ namespace GymLab.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult<SportProgramDto>> Create(SportProgramDto dto, string categoryName)
         {
-            var program = new SportProgram {Type = dto.Type, Duration = dto.Duration, Intensity = dto.Intensity, Description = dto.Description, Workout = dto.Workout, Score = 0};
+            var program = new SportProgram {
+                Type = dto.Type,
+                Duration = dto.Duration,
+                Intensity = dto.Intensity,
+                Description = dto.Description,
+                Workout = dto.Workout,
+                Score = 0,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            };
 
             await _programsRepository.CreateAsync(program, categoryName);
 
@@ -80,12 +96,19 @@ namespace GymLab.Controllers
         }
 
         [HttpPut("{programId}")]
+        [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult<SportProgramDto>> Update(int programId, string categoryName, UpdateSportProgramDto dto)
         {
             var program = await _programsRepository.GetAsync(programId, categoryName);
 
             if (program == null)
                 return NotFound();//404
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, program, PolicyNames.ResourceOwner);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();//403
+            }
 
             program.Type = dto.Type;
             program.Duration = dto.Duration;
@@ -98,13 +121,20 @@ namespace GymLab.Controllers
             return Ok(new SportProgramDto(program.Id, program.Type, program.Duration, program.Intensity, program.Description, program.Workout, program.Score));
         }
 
-        [HttpDelete("{programId}"/*, Name = "DeleteSportProgram"*/)]
+        [HttpDelete("{programId}")]
+        [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult> Remove(int programId, string categoryName)
         {
             var program = await _programsRepository.GetAsync(programId, categoryName);
 
             if (program == null)
                 return NotFound();//404
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, program, PolicyNames.ResourceOwner);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();//403
+            }
 
             await _programsRepository.DeleteAsync(program);
 

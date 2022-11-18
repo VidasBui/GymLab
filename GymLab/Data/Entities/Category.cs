@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GymLab.Data.Entities
 {
-    public class Category
+    public class Category : IUserOwnedResource
     {
         [Key]
         public string Name { get; set; }

@@ -16,10 +16,12 @@ namespace GymLab.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoriesRepository _categoriesRepository;
+        private readonly IAuthorizationService _authorizationService;
 
-        public CategoryController(ICategoriesRepository categoriesRepository)
+        public CategoryController(ICategoriesRepository categoriesRepository, IAuthorizationService authorizationService)
         {
             _categoriesRepository = categoriesRepository;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -100,6 +102,12 @@ namespace GymLab.Controllers
 
             if (category == null)
                 return NotFound();//404
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, category, PolicyNames.ResourceOwner);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();//403
+            }
 
             category.Describtion = dto.Description;
             await _categoriesRepository.UpdateAsync(category);

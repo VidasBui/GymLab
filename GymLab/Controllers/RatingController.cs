@@ -1,7 +1,11 @@
-﻿using GymLab.Data.Dtos;
+﻿using GymLab.Auth.Model;
+using GymLab.Data.Dtos;
 using GymLab.Data.Entities;
 using GymLab.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace GymLab.Controllers
 {
@@ -10,9 +14,12 @@ namespace GymLab.Controllers
     public class RatingController : ControllerBase
     {
         private readonly IRatingsRepository _ratingsRepository;
-        public RatingController(IRatingsRepository ratingsRepository)
+        private readonly IAuthorizationService _authorizationService;
+
+        public RatingController(IRatingsRepository ratingsRepository, IAuthorizationService authorizationService)
         {
             _ratingsRepository = ratingsRepository;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -37,10 +44,15 @@ namespace GymLab.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult<RatingDto>> Create(RatingDto dto, int programId)
         {
 
-            var rating = new Rating { Comment = dto.Comment, Evaluation = dto.Evaluation};
+            var rating = new Rating {
+                Comment = dto.Comment,
+                Evaluation = dto.Evaluation,
+                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+            };
 
             if (rating.Evaluation > 5 || rating.Evaluation < 1) return BadRequest();//400
 
@@ -51,12 +63,19 @@ namespace GymLab.Controllers
         }
 
         [HttpPut("{ratingId}")]
+        [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult<RatingDto>> Update(int ratingId, UpdateRatingDto dto)
         {
             var rating = await _ratingsRepository.GetAsync(ratingId);
 
             if (rating == null)
                 return NotFound();//404
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, rating, PolicyNames.ResourceOwner);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();//403
+            }
 
             rating.Comment = dto.Comment;
             rating.Evaluation = dto.Evaluation;
@@ -66,12 +85,19 @@ namespace GymLab.Controllers
         }
 
         [HttpDelete("{ratingId}")]
+        [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult> Remove(int ratingId)
         {
             var rating = await _ratingsRepository.GetAsync(ratingId);
 
             if (rating == null)
                 return NotFound();//404
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, rating, PolicyNames.ResourceOwner);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();//403
+            }
 
             await _ratingsRepository.DeleteAsync(rating);
 
