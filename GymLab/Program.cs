@@ -10,7 +10,18 @@ using GymLab.Auth;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000",
+                                              "https://gymlab.azurewebsites.net"); // add the allowed origins
+                      });
+});
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 // Microsoft.EntityFrameworkCore.SqlServer
 // Microsoft.EntityFrameworkCore.Tools
@@ -63,5 +74,5 @@ app.UseAuthorization();
 
 var dbSeeder = app.Services.CreateScope().ServiceProvider.GetRequiredService<AuthDbSeeder>();
 await dbSeeder.SeedAsync();
-
+app.UseCors(MyAllowSpecificOrigins);
 app.Run();
