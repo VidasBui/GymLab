@@ -9,9 +9,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Xml;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace GymLab.Controllers
 {
+
+
     [ApiController]
     [Route("api/categories/{categoryName}/sportPrograms")]
     public class SportProgramController : ControllerBase
@@ -60,7 +64,7 @@ namespace GymLab.Controllers
 
             return programs.Select(x => new SportProgramDto(x.Id, x.Type, x.Duration, x.Intensity, x.Description, x.Workout, x.Score));
         }*/
-        
+
         [HttpGet("{programId}"/*, Name = "GetSportPrograms"*/)]
         public async Task<IActionResult> Get(string categoryName, int programId)
         {
@@ -79,7 +83,8 @@ namespace GymLab.Controllers
         [Authorize(Roles = ForumRoles.ForumUser)]
         public async Task<ActionResult<SportProgramDto>> Create(SportProgramDto dto, string categoryName)
         {
-            var program = new SportProgram {
+            var program = new SportProgram
+            {
                 Type = dto.Type,
                 Duration = dto.Duration,
                 Intensity = dto.Intensity,
@@ -87,6 +92,7 @@ namespace GymLab.Controllers
                 Workout = dto.Workout,
                 Score = 0,
                 UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+                //UserId = "fb427401-aa95-46e0-9fe2-85b008da9b95"
             };
 
             await _programsRepository.CreateAsync(program, categoryName);
@@ -170,3 +176,4 @@ namespace GymLab.Controllers
     }
 
 }
+

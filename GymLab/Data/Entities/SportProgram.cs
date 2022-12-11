@@ -19,9 +19,9 @@ namespace GymLab.Data.Entities
     }
     public enum Type
     {
-        begginer,
-        intermediate,
-        advanced
+        Begginer,
+        Intermediate,
+        Advanced
     }
     public enum Duration
     {

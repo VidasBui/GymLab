@@ -78,19 +78,29 @@ namespace GymLab.Controllers
         [Authorize(Roles = ForumRoles.Admin)]
         public async Task<ActionResult<CategoryDto>> Create(CreateCategoryDto dto)
         {
-            var c = await _categoriesRepository.GetAsync(dto.Name);
-            if (c != null) return BadRequest();//400
+            try
+            {
+                var c = await _categoriesRepository.GetAsync(dto.Name);
+                if (c != null) return BadRequest();//400
 
-            var category = new Category { 
-                Name = dto.Name, 
-                Describtion = dto.Description,
-                UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
-            };
+                var category = new Category
+                {
+                    Name = dto.Name,
+                    Describtion = dto.Description,
+                    UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+                    //UserId = "fb427401-aa95-46e0-9fe2-85b008da9b95"
+                };
+           
 
             await _categoriesRepository.CreateAsync(category);
 
             //201
             return Created ("", new CategoryDto(category.Name, category.Describtion));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message + e.InnerException.Message);
+            }
         }
 
         [HttpPut]
@@ -119,14 +129,16 @@ namespace GymLab.Controllers
         [Authorize(Roles = ForumRoles.Admin)]
         public async Task<ActionResult> Remove(string categoryName)
         {
-            var category = await _categoriesRepository.GetAsync(categoryName);
+   
+                var category = await _categoriesRepository.GetAsync(categoryName);
 
-            if (category == null)
-                return NotFound();//404
+                if (category == null)
+                    return NotFound();//404
 
-            await _categoriesRepository.DeleteAsync(category);
+                await _categoriesRepository.DeleteAsync(category);
 
-            return NoContent();//204
+                return NoContent();//204
+            
         }
 
         /*private string? CreateCategoriesResourceUri(CategorySearchParameters searchParameters, ResourceUriType type)
