@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+
 import {
     Box,
     Button,
@@ -25,21 +28,15 @@ import {
   } from "@mui/material";
 
 
-
-const Register = () => {
+const Login = () => {
   const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
-  const toLoginPage = () => {
-    navigate('/login');
-}
 
   const handleSubmit = (e) => {
     e.preventDefault();
       (async () => {
-          const result = await fetch(`/api/register`, {
+          const result = await fetch(`/api/login`, {
             method:'POST',
             headers:{
                 'Accept':'*/*',
@@ -47,20 +44,22 @@ const Register = () => {
             },
             body:JSON.stringify({
                 userName:userName,
-                email:email,
                 password:password
-            })})
-        result.json().then((response) => {if(result.status != 201) alert(`failed with status ${result.status}`);
-        else {
-          alert("user created successfully!");
-          toLoginPage();
-        }});
+            })}).then(response=>response.json())
+            .then(data=>
+            {
+              Cookies.set('token', data.accessToken, { expires: 1, path: '' })
+              //toCategoryPage();
+              window.location.href = "/category";
+            }).catch((error) => {
+                alert("bad username or password!");
+            })
       })()
   }
 
   return (
     <>
-    <Typography sx = {{textAlign:"center", fontSize: "22px", fontWeight: "bold", my:5}}>Register</Typography>
+    <Typography sx = {{textAlign:"center", fontSize: "22px", fontWeight: "bold", my:5}}>Login</Typography>
     <form onSubmit={handleSubmit}>
               <Stack direction = "column" alignItems="center" spacing={2}>
       <TextField sx = {{width: '70%'}}
@@ -69,14 +68,6 @@ const Register = () => {
         required
         value={userName}
         onChange={e => setUserName(e.target.value)}
-      />
-      <TextField sx = {{width: '70%'}}
-        label="Email"
-        variant="filled"
-        type="email"
-        required
-        value={email}
-        onChange={e => setEmail(e.target.value)}
       />
       <TextField sx = {{width: '70%'}}
         label="Password"
@@ -88,7 +79,7 @@ const Register = () => {
       />
       <div>
         <Button type="submit" variant="contained" color="primary">
-          Signup
+          Login
         </Button>
       </div>
       </Stack>
@@ -97,4 +88,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

@@ -10,6 +10,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.3",
+    "js-cookie": "^3.0.1",
+    "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^18.2.0",
@@ -41,5 +43,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy":"https://gymlab.azurewebsites.net"
+  "proxy": "https://gymlab.azurewebsites.net"
 }

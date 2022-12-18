@@ -1,12 +1,17 @@
 import React,{ useEffect, useState } from "react";
 import {Table, Form} from 'react-bootstrap';
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+
 import {
     Box,
     Button,
     TextField,
     Grid,
+    Rating,
     Paper,
+    LinearProgress,
     FormControl,
     OutlinedInput ,
     InputLabel,
@@ -27,11 +32,15 @@ import {
 
 
 const SportPrograms = () => {
+    const token = Cookies.get('token')
+    const decoded = token !== undefined ? jwt_decode(token) : "";
+    const userRole = decoded == "" ? "Guest" : decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'][0];
     const [data, setData] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState("");
     const [refresh, setRefresh] = useState(false);
     const navigate = useNavigate();
+
 const location = useLocation();
     useEffect(() => {
        (async () => {
@@ -42,7 +51,6 @@ const location = useLocation();
         {
             setData(data);
         });
-
         } catch (e){
             setError("Message: " + e);
         } finally {
@@ -68,6 +76,7 @@ const location = useLocation();
                 const result = await fetch(`/api/categories/${location.state.categoryName}/sportPrograms`,{
                   method:'POST',
                   headers:{
+                      'Authorization':"Bearer "+ token,
                       'Accept':'*/*',
                       'Content-Type':'application/json'
                   },
@@ -174,15 +183,17 @@ const location = useLocation();
         const handleDeleteClose = () => setOpenDelete(false);
 
         const toRatings = () => {
-            navigate('/ratings', {state:{categoryName:location.state.categoryName, sportProgramId:id}});
+            navigate('/rating', {state:{categoryName:location.state.categoryName, sportProgramId:id}});
         }
 
         const handleSubmit = (e) => {
             e.preventDefault();
+            
             (async () => {
               const result = await fetch(`/api/categories/${location.state.categoryName}/sportPrograms/${id}`,{
                 method:'PUT',
                 headers:{
+                    'Authorization':"Bearer "+ token,
                     'Accept':'*/*',
                     'Content-Type':'application/json'
                 },
@@ -194,7 +205,7 @@ const location = useLocation();
                   workout:workoutEdit
                 })
             })
-            
+            result.status == 403 ? alert ("You can't edit sport programs created by other users!") :
             result.json().then((response) => {
                 setType(response.type);
                 setDuration(response.duration);
@@ -204,6 +215,7 @@ const location = useLocation();
                 handleClose();
               })
             })()
+          
           }
 
         const handleDelete = () => {
@@ -213,11 +225,15 @@ const location = useLocation();
               fetch(`/api/categories/${location.state.categoryName}/sportPrograms/${id}`,{
                 method:'DELETE',
                 headers:{
+                    'Authorization':"Bearer "+ token,
                     'Accept':'*/*',
                     'Content-Type':'application/json'
                 }
             })
-            .then(res=>{if(res.status != 204) alert(`failed with status ${res.status}`); else setData([...filtered]);})
+            .then(res=>{
+              if(res.status == 403) alert ("You can't delete sport programs that are created by other users!") 
+              else {if(res.status != 204) alert(`failed with status ${res.status}`); 
+              else setData([...filtered]);}});
             })();
             handleDeleteClose();
         }    
@@ -241,13 +257,13 @@ const location = useLocation();
               {workout}
               </TableCell>
               <TableCell>
-              {score}
+              <Rating readOnly value={score}/>
               </TableCell>
               <TableCell>
                 <Stack direction="row" alignItems="center" spacing={1}>
                   <Button variant="contained" color = 'primary' onClick={toRatings}>View</Button>
-                  <Button variant="contained" color = 'info' onClick={handleOpen}>Edit</Button>
-                  <Button variant="contained" color = 'error' onClick={handleDeleteOpen}>Delete</Button>
+                  {userRole != "Guest" &&<Button variant="contained" color = 'info' onClick={handleOpen}>Edit</Button>}
+                  {userRole != "Guest" &&<Button variant="contained" color = 'error' onClick={handleDeleteOpen}>Delete</Button>}
                 </Stack>
               </TableCell>
             </TableRow>
@@ -348,12 +364,19 @@ const location = useLocation();
         );
     }
 
+    if(!loaded) 
+    return <>
+    <Box sx={{ width: '100%' }}>
+    <LinearProgress sx={{height: 10}}/>
+    </Box></>
+
 return (
     <>
-    <ItemAdd/>
+    {userRole != "Guest" && <ItemAdd/>}
     {(loaded && error === "") ?
 
     <div>
+       {data.length < 1 ? <><Typography variant = "h5" mt = {2}>No records to display</Typography></>:
       <Table className="mt-4" striped bordered hover size="sm">
         <TableHead>
           <TableRow>
@@ -374,6 +397,7 @@ return (
         }
         </TableBody>
       </Table>
+    }
     </div>
     : <Typography>{error}</Typography>
     }

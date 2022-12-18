@@ -8,8 +8,9 @@ import {Navigation} from './Navigation';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Categories from './Pages/Category';
 import SportProgram from './Pages/SportProgram';
-import Ratings from './Pages/Ratings';
+import RatingEntity from './Pages/Ratings';
 import Register from './Pages/Register';
+import Login from './Pages/Login';
 
 function App() {
   return (
@@ -21,8 +22,9 @@ function App() {
           <Route path ='/home' element={<Home/>} exact/>
           <Route path ='/category' element={<Categories/>} exact/>
           <Route path ='/sportprogram' element={<SportProgram/>}/>
-          <Route path ='/ratings' element={<Ratings/>}/>
+          <Route path ='/rating' element={<RatingEntity/>}/>
           <Route path ='/register' element={<Register/>}/>
+          <Route path ='/login' element={<Login/>}/>
         </Routes>
     </div>
     </BrowserRouter>

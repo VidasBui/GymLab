@@ -1,10 +1,15 @@
 import React,{ useEffect, useState } from "react";
 import {Table, Form} from 'react-bootstrap';
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+
 import {
     Box,
     Button,
     TextField,
+    Rating,
+    LinearProgress,
     Grid,
     Paper,
     FormControl,
@@ -25,12 +30,14 @@ import {
     TableBody
   } from "@mui/material";
 
-  const Ratings = () => {
+  const RatingEntity = () => {
+    const token = Cookies.get('token');
+    const decoded = token !== undefined ? jwt_decode(token) : "";
+    const userRole = decoded == "" ? "Guest" : decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'][0];
     const [data, setData] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState("");
     const [refresh, setRefresh] = useState(false);
-    const navigate = useNavigate();
 
     const location = useLocation();
     useEffect(() => {
@@ -42,7 +49,6 @@ import {
         {
             setData(data);
         });
-
         } catch (e){
             setError("Message: " + e);
         } finally {
@@ -51,7 +57,7 @@ import {
        })(); 
     }, [refresh]);
 
-    const Rating = (props) => {
+    const RatingEntity = (props) => {
         const [id, setId] = useState(props.id);
         const [comment, setComment] = useState(props.comment);
         const [evaluation, setEvaluation] = useState(props.evaluation);
@@ -64,7 +70,46 @@ import {
         const handleDeleteOpen = () => setOpenDelete(true);
         const handleDeleteClose = () => setOpenDelete(false);
     
-        const [input, setInput] = useState(props.description);
+        const [commentEdit, setEditComment] = useState(props.comment);
+        const [evaluationEdit, setEditEvaluation] = useState(props.evaluation);
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          (async () => {fetch(`api/categories/${location.state.categoryName}/sportPrograms/${location.state.sportProgramId}/ratings/${id}`,{
+              method:'PUT',
+              headers:{
+                  'Authorization':"Bearer "+ token,
+                  'Accept':'*/*',
+                  'Content-Type':'application/json'
+              },
+              body:JSON.stringify({
+                  comment:commentEdit,
+                  evaluation:evaluationEdit
+              })
+          }).then(res => {res.status == 403 ? alert ("You can't edit ratings created by other users!") : 
+            setComment(commentEdit);
+            setEvaluation(evaluationEdit);
+            handleClose();
+          })
+        })()
+      }
+
+      const handleDelete = () => {
+        let filtered = data.filter(n => n.id != id);
+        
+        (async () => {fetch(`api/categories/${location.state.categoryName}/sportPrograms/${location.state.sportProgramId}/ratings/${id}`,{
+            method:'DELETE',
+            headers:{
+                'Authorization':"Bearer "+ token,
+                'Accept':'*/*',
+                'Content-Type':'application/json'
+            }
+        })
+        .then(res=>{
+          if(res.status != 204) alert(`failed with status ${res.status}`); else setData([...filtered]);})
+        })();
+        handleDeleteClose();
+    } 
 
         return (
             <>
@@ -73,31 +118,72 @@ import {
                 {comment}
               </TableCell>
               <TableCell>
-                {evaluation}
+              <Rating readOnly size="large" value={evaluation}/>
               </TableCell>
-              <TableCell>
-                <Stack direction="row" alignItems="center" spacing={1}>
+              {userRole != "Guest" && <TableCell>
+              <Stack direction="row" justifyContent ="center" alignItems="center" spacing={1}>
                   <Button variant="contained" color = 'info' onClick={handleOpen}>Edit</Button>
                   <Button variant="contained" color = 'error' onClick={handleDeleteOpen}>Delete</Button>
                 </Stack>
-              </TableCell>
+              </TableCell>}
             </TableRow>
+            <Dialog PaperProps={{ sx: { width: "60%" } }} 
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogContent>
+                <Typography sx ={{textAlign:"center", fontWeight: "bold", fontSize: 22}}>Edit Rating</Typography>
+                <form onSubmit = {handleSubmit}>
+                <Typography>Id</Typography>
+                <TextField sx = {{width: '100%', mb:2}} variant="filled" defaultValue = {id} label="Read Only" InputProps={{readOnly: true}}/>
+                <Typography>Comment</Typography>
+                <TextField multiline maxRows={9} sx = {{width: '100%', mb:2}} variant="filled" defaultValue = {comment} onChange = {(event) => setEditComment(event.currentTarget.value)}/>
+                <Typography>Evaluation</Typography>
+                  <Rating size="large" name="no-value" defaultValue={evaluation} onChange = {(event) => setEditEvaluation(event.currentTarget.value)}/>
+                    <Box display="block"><Button variant="contained" sx ={{display:"block", m:"auto"}} type="submit">Save</Button></Box>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            <Dialog PaperProps={{ sx: { width: "60%" } }} 
+                open={openDelete}
+                onClose={handleDeleteClose}
+            >
+                <DialogContent>
+                <Typography sx ={{textAlign:"center", fontWeight: "bold", fontSize: 22}}>Delete category</Typography>
+                <Typography>Id</Typography>
+                <TextField sx = {{width: '100%', mb:2}} variant="filled" defaultValue = {id} label="Read Only" InputProps={{readOnly: true}}/>
+                <Typography>Comment</Typography>
+                <TextField multiline maxRows={9} sx = {{width: '100%', mb:2}} variant="filled" defaultValue = {comment} label="Read Only" InputProps={{readOnly: true}}/>
+                <Typography>Evaluation</Typography>
+                  <Rating readOnly size="large" value={evaluation}/>
+                  <Stack  direction="row" justifyContent="center" spacing={1}>
+                    <Button variant="contained" color = 'error' onClick={handleDelete}>Delete</Button>
+                    <Button variant="contained" color = 'info' onClick={handleDeleteClose}>Cancel</Button>
+                  </Stack>
+                </DialogContent>
+            </Dialog>
             </>
         );
     }
     const ItemAdd = () => {
         const [addComment, setAddComment] = useState("");
-        const [addEvaluation, setAddEvaluation] = useState("");
+        const [addEvaluation, setAddEvaluation] = useState(0);
         const [openAdd, setOpenAdd] = useState(false);
         const handleOpenAdd = () => setOpenAdd(true);
         const handleCloseAdd = () => setOpenAdd(false);
 
         const handleAdd = (e) => {
             e.preventDefault();
+            if(addEvaluation == 0) {
+              alert("Please select evaluation"); 
+              return;
+            }
+
               (async () => {
                   const result = await fetch(`/api/categories/${location.state.categoryName}/sportPrograms/${location.state.sportProgramId}/ratings`, {
                     method:'POST',
                     headers:{
+                        'Authorization':"Bearer "+ token,
                         'Accept':'*/*',
                         'Content-Type':'application/json'
                     },
@@ -110,8 +196,7 @@ import {
                   setData([...data, {
                     "id": response.id,
                     "comment": addComment,
-                    "evaluation": addEvaluation }])
-                }});
+                    "evaluation": addEvaluation }])}});
               })()
           }
   
@@ -125,8 +210,9 @@ import {
                   <form onSubmit={handleAdd}>
                   <Typography sx ={{textAlign:"center", fontWeight: "bold", fontSize: 22}}>Add rating</Typography>
                   <Typography>Comment</Typography>
+                  <TextField sx = {{width: '100%', mb:2}} multiline maxRows={9} variant="filled" value={addComment} onChange={(event) => setAddComment(event.currentTarget.value)}/>
                   <Typography>Evaluation</Typography>
-                  <TextField sx = {{width: '100%', mb:2}} required multiline maxRows={9} label="Required" variant="filled" value={addEvaluation} onChange={(event) => setAddEvaluation(event.currentTarget.value)}/>
+                  <Rating size="large" name="no-value" value={addEvaluation} onChange = {(event) => setAddEvaluation(event.currentTarget.value)}/>
                   <Box display="block"><Button variant="contained" sx ={{display:"block", m:"auto"}} type="submit">Submit</Button></Box>
                   </form>
                   </DialogContent>
@@ -135,37 +221,40 @@ import {
           );
       }
 
+    if(!loaded) 
+    return <>
+    <Box sx={{ width: '100%' }}>
+    <LinearProgress sx={{height: 10}}/>
+    </Box></>
     return (
         <>
-        <ItemAdd/>
+        {userRole != "Guest" && <ItemAdd/>}
         {(loaded && error === "") ?
         <div>
+          {data.length < 1 ? <><Typography variant = "h5" mt = {2}>No records to display</Typography></>:
           <Table className="mt-4" striped bordered hover size="sm">
             <TableHead>
               <TableRow>
                 <TableCell sx = {{width: '60%', textAlign:"center", fontSize: "19px", fontWeight: "bold"}}>Comment</TableCell>
-                <TableCell sx = {{width: '10%', textAlign:"center", fontSize: "19px", fontWeight: "bold"}}>Evaluation</TableCell>
-                <TableCell sx = {{width: '20%', textAlign:"center", fontSize: "19px", fontWeight: "bold"}}>Options</TableCell>
+                <TableCell sx = {{width: '20%', textAlign:"center", fontSize: "19px", fontWeight: "bold"}}>Evaluation</TableCell>
+                {userRole != "Guest" && <TableCell sx = {{width: '20%', textAlign:"center", fontSize: "19px", fontWeight: "bold"}}>Options</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
             {
             data.map((item) => {
-                  return (<Rating id={item.id} comment={item.comment} evaluation={item.evaluation}/>);
+                  return (<RatingEntity id={item.id} comment={item.comment} evaluation={item.evaluation}/>);
               })
             }
+            
             </TableBody>
           </Table>
+        }
         </div>
         : <Typography>{error}</Typography>
         }
         </>
-    );
-    
-    
-    
+    );  
     
 }
-export default Ratings;
-    
-
+export default RatingEntity;

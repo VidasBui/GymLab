@@ -1,11 +1,15 @@
 import React,{ useEffect, useState } from "react";
 import {Table, Form} from 'react-bootstrap';
 import { useNavigate } from 'react-router';
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+
 import {
     Box,
     Button,
     TextField,
     Grid,
+    LinearProgress,
     Paper,
     FormControl,
     MenuItem,
@@ -24,6 +28,9 @@ import {
   } from "@mui/material";
 
 const Categories = () => {
+    const token = Cookies.get('token')
+    const decoded = token !== undefined ? jwt_decode(token) : "";
+    const userRole = decoded == "" ? "Guest" : decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'][0];
     const [data, setData] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState("");
@@ -39,7 +46,6 @@ const Categories = () => {
         {
             setData(data);
         });
-
         } catch (e){
             setError("Message: " + e);
         } finally {
@@ -61,13 +67,14 @@ const Categories = () => {
         const toSportPrograms = () => {
           navigate('/sportProgram', {state:{categoryName:name}});
       }
-      
+
         const handleSubmit = (e) => {
             e.preventDefault();
             (async () => {
               fetch(`/api/categories/${name}`,{
                 method:'PUT',
                 headers:{
+                    'Authorization':"Bearer "+ token,
                     'Accept':'*/*',
                     'Content-Type':'application/json'
                 },
@@ -90,11 +97,14 @@ const Categories = () => {
               fetch(`/api/categories/${name}`,{
                 method:'DELETE',
                 headers:{
+                    'Authorization':"Bearer "+ token,
                     'Accept':'*/*',
                     'Content-Type':'application/json'
                 }
             })
-            .then(res=>{if(res.status != 204) alert(`failed with status ${res.status}`); else setData([...filtered]);})
+            .then(res=>{
+              if(res.status == 500) alert ("Can't delete category! Category contains sport programs");
+              else {if(res.status != 204) alert(`failed with status ${res.status}`); else setData([...filtered]);}})
             })();
             handleDeleteClose();
         } 
@@ -109,10 +119,10 @@ const Categories = () => {
                 {description}
               </TableCell>
               <TableCell>
-                <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack direction="row" justifyContent ="center" alignItems="center" spacing={1}>
                   <Button variant="contained" color = 'primary' onClick={toSportPrograms}>View</Button>
-                  <Button variant="contained" color = 'info' onClick={handleOpen}>Edit</Button>
-                  <Button variant="contained" color = 'error' onClick={handleDeleteOpen}>Delete</Button>
+                  {userRole == "Admin" && <Button variant="contained" color = 'info' onClick={handleOpen}>Edit</Button>}
+                  {userRole == "Admin" && <Button variant="contained" color = 'error' onClick={handleDeleteOpen}>Delete</Button>}
                 </Stack>
               </TableCell>
             </TableRow>
@@ -165,6 +175,7 @@ const Categories = () => {
                 fetch('/api/categories',{
                   method:'POST',
                   headers:{
+                      'Authorization':"Bearer "+ token,
                       'Accept':'*/*',
                       'Content-Type':'application/json'
                   },
@@ -203,11 +214,16 @@ const Categories = () => {
         );
     }
 
+    if(!loaded) 
+    return <>
+    <Box sx={{ width: '100%' }}>
+    <LinearProgress sx={{height: 10}}/>
+    </Box></>
+
     return (
       <>
-      <ItemAdd/>
+      {userRole == "Admin" && <ItemAdd/>}
       {(loaded && error === "") ?
-
       <div>
         <Table className="mt-4" striped bordered hover size="sm">
           <TableHead>
