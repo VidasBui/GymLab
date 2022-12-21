@@ -1,31 +1,35 @@
-1.	Sprendžiamo uždavinio aprašymas 
-
-1.1.	Sistemos paskirtis
+1	Sistemos paskirtis
 
 Projekto tikslas – sukurti platformą, kuri palengvintų tiek norintiems pradėti sportuoti, tiek patyrusiems sportininkams išsirinkti norimą sporto programą.
+
 Veikimo principas  – kuriamą platformą sudaro dvi dalys: internetinė aplikacija, kuria naudosis vartotojai, administratorius bei aplikacijų programavimo sąsaja (angl. trump. API).
-Neprisijungę vartotojai galės prisiregistruoti, peržiūrėti visas internetinėje svetainėje patalpintas sporto programas, jas filtruoti pagal norimus kriterijus, bei peržiūrėti komentarus ir įvertinimus.
-Prisijungę vartotojai paveldi visas neprisijungusių vartotojų funkcijas, taip pat gali pasidalinti savo sporto programomis, peržiūrėti visas savo pasiūlytas programas, įvertinti bei komentuoti visas patalpintas programas svetainėje.
-Administratorius gali patvirtinti arba atmesti vartotojų pasiūlytas programas, pašalinti nepageidaujamus komentarus, uždrausti prieigą prie svetainės nepageidaujamiems vartotojams.
 
-1.2.	Funkciniai reikalavimai
+Funkciniai reikalavimai:
 
-Svečias galės: 
-1.	Peržiūrėti platformos reprezentacinį puslapį
-2.	Peržiūrėti visas puslapyje patalpinas sporto programas 
-3.	Peržiūrėti sporto programų komentarus ir įvertinimus
-4.	Filtruoti sporto program sąrašą pagal norimus kriterijus
-5.	Užsiregistruoti prie internetinės svetainės
-6.	Prisijungti prie internetinės svetainės.
-Vartotojas galės: 
-1.	Atlikti visas funckijas galimas svečiui (išskyrus registraciją)
-2.	Pasidalinti savo sporto programomis
-3.	Peržiūrėti visas savo pasiūlytas programas
-4.	Įvertinti bei komentuoti visas patalpintas sporto programas svetainėje
-Administratorius galės: 
-1.	Patvirtinti arba atmesti vartotojų pasiųlytas programas
-2.	Pašalinti nepageidaujamus komentarus
-3.	Uždrausti lankytis svetainėje nepageidaujamiems vartotojams
+Neprisijungęs sistemos naudotojas (svečias) galės:
+
+  1. Peržiūrėti visas internetinėje svetainėje patalpintus įrašus.
+  2. Susikurti vartotojo paskyrą.
+  3. Prisijungti prie sistemos.
+
+Užsiregistravęs sistemos naudotojas galės:
+
+  1. Peržiūrėti visas internetinėje svetainėje patalpintus įrašus.
+  2. Sukurti naujas sporto programas.
+  3. Įvertinti (reitinguoti) sporto programas.
+  4. Redaguoti bei šalinti savo sukurtas sporto programas bei reitingus.
+  5. Atsijungti nuo sistemos.
+  6. Prisijugnti prie sistemos.
+ 
+ Administratorius galės:
+ 
+  1. Peržiūrėti visas internetinėje svetainėje patalpintus įrašus.
+  2. Sukurti naujas sporto programas.
+  3. Įvertinti (reitinguoti) sporto programas.
+  4. Sukurti naujas sporto programų karegorijas.
+  4. Redaguoti,  šalinti kategorijas, sporto programas bei reitingus nepriklausomai nuo to, koks vartotojas jas sukūrė.
+  5. Atsijungti nuo sistemos.
+  6. Prisijugnti prie sistemos.
 
 2.	Sistemos architektūra
 
