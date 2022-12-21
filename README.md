@@ -1,4 +1,4 @@
-1	Sistemos paskirtis
+Sistemos paskirtis
 
 Projekto tikslas – sukurti platformą, kuri palengvintų tiek norintiems pradėti sportuoti, tiek patyrusiems sportininkams išsirinkti norimą sporto programą.
 
@@ -31,9 +31,21 @@ Užsiregistravęs sistemos naudotojas galės:
   5. Atsijungti nuo sistemos.
   6. Prisijugnti prie sistemos.
 
-2.	Sistemos architektūra
+Sistemos architektūra
+
+![image](https://user-images.githubusercontent.com/107630990/208941348-6b5fb121-5671-47ea-b825-9374853e659c.png)
+
 
 Sistemos sudedamosios dalys:
 •	Kliento pusė (ang. Front-End) – naudojant React.js; 
 •	Serverio pusė (angl. Back-End) – naudojant .NET, duomenų bazė – MySQL.
 Sistemos talpinimui yra naudojamas Azure cloud serveris. Visos sistemos dalys yra diegiamos tame pačiame serveryje. Internetinė aplikacija yra pasiekiama per HTTPS protokolą. Sistemos veikimui yra reikalingas GymLab API, kuris leidžia komunikuoti su MySql duomenų bazės serveriu, tam naudoja ORM sąsaja.
+
+Naudotojo sąsajos projektas
+
+Navigacija
+| Wireframe  | Realizacija |
+| ------------- | ------------- |
+| ![image](https://user-images.githubusercontent.com/107630990/208947774-c1f0f52e-084e-4ec5-9269-7ece720688d8.png) | ![image](https://user-images.githubusercontent.com/107630990/208947977-4fc93a6d-c2bd-4b8b-b41f-6bf66817117e.png) | 
+![image](https://user-images.githubusercontent.com/107630990/208949634-28a27198-fdb4-423f-b934-f8df7c8ae120.png) | ![image](https://user-images.githubusercontent.com/107630990/208949724-99bb3e86-d4ca-47cd-9750-621e1dc3a562.png) |
+![image](https://user-images.githubusercontent.com/107630990/208950975-08b625bc-7e74-40fe-bcc6-1d6269b93249.png) | ![image](https://user-images.githubusercontent.com/107630990/208951042-8ed8a5d8-395c-4253-99ae-6f3f2c1e7f39.png) |
