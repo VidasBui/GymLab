@@ -49,3 +49,9 @@ Navigacija
 | ![image](https://user-images.githubusercontent.com/107630990/209137836-d7bbcdde-010f-4bfc-ae39-1a06485fe371.png) | ![image](https://user-images.githubusercontent.com/107630990/208947977-4fc93a6d-c2bd-4b8b-b41f-6bf66817117e.png) | 
 ![image](https://user-images.githubusercontent.com/107630990/209138011-f5c9019b-81b4-4eb8-b091-834ad76b2359.png) | ![image](https://user-images.githubusercontent.com/107630990/208949724-99bb3e86-d4ca-47cd-9750-621e1dc3a562.png) |
 ![image](https://user-images.githubusercontent.com/107630990/209138546-4c5497a8-47a5-4094-b129-1809f0a8b04c.png) | ![image](https://user-images.githubusercontent.com/107630990/208951042-8ed8a5d8-395c-4253-99ae-6f3f2c1e7f39.png) |
+
+Registracija, Prisijungimas
+| Wireframe  | Realizacija |
+| ------------- | ------------- |
+| ![image](https://user-images.githubusercontent.com/107630990/209222263-f2a01625-285d-4e00-82b7-84ec0e4a2e4b.png) | ![image](https://user-images.githubusercontent.com/107630990/209222614-b1947518-3dce-45ab-9fdd-8a8cbefb0af2.png) |
+| ![image](https://user-images.githubusercontent.com/107630990/209222346-914189ab-d344-47cc-8bb5-a6358bf562fc.png) | ![image](https://user-images.githubusercontent.com/107630990/209222563-85773b34-9351-49d9-a879-4163977bb7c1.png) |
