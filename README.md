@@ -61,3 +61,7 @@ Kategorijų, sporto programų ir reitingų atvaizvavimas
 | ------------- | ------------- |
 | ![image](https://user-images.githubusercontent.com/107630990/209225831-fca0c318-db99-47a9-8957-1dc41d11c6d1.png) | ![image](https://user-images.githubusercontent.com/107630990/209225917-83e36d3b-fc55-4c05-ba45-838513e71c41.png) |
 
+Kategorijų, sporto programų ir reitingų pridėjimo, keitimo, šalinimo modaliniai langai
+| Wireframe  | Realizacija |
+| ------------- | ------------- |
+| ![image](https://user-images.githubusercontent.com/107630990/209227603-000805a8-ccc4-4948-b207-dbf20fb8f51f.png) | ![image](https://user-images.githubusercontent.com/107630990/209227706-edaee26d-02f1-4dcd-b334-72f4d59120b2.png) |
