@@ -75,7 +75,7 @@ Reikalaujamos siuntimo antraštės:
 | withCredentials | true |
 | Content-Type | application/json |
 
-Panaudojimo pavyzdžiai
+## Panaudojimo pavyzdžiai
 
 ### GET užklausa: {domain}/api/categories
 
@@ -100,4 +100,118 @@ Atsako pavyzdys:
         "description": "Weight loss program means a general program of instruction, with food, supplements, food products, or a food plan designed for clients from one or more healthy population groups, in order that such clients may achieve or maintain a healthy weight."
     }
 ]
+```
+
+### GET užklausa: {domain}/api/categories/{name}
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sąrašas |
+| 404 | Nerastas |
+
+200 Atsako pavyzdys:
+```
+[
+    {
+        "name": "Lose weight",
+        "description": "Weight loss program means a general program of instruction, with food, supplements, food products, or a food plan designed for clients from one or more healthy population groups, in order that such clients may achieve or maintain a healthy weight."
+    }
+]
+```
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-5526dc13356d2af271cc40d21e29df9a-fe69096967696a7e-00"
+}
+```
+
+### POST užklausa: {domain}/api/categories/
+
+Reikalaujamos siuntimo argumentai:
+| Argumentas  | Reikšmėa |
+| ------------- | ------------- |
+| Name | kategorijos pavadinimas |
+| Description | kategorijos aprašymas |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 201 | Gražinamas sukurtas įrašas |
+| 401 | Neautorizuotas |
+| 400 | Blogi duomenys |
+
+201 Atsako pavyzdys:
+```
+{
+    "name": "Lose weight",
+    "description": "Weight loss program means a general program of instruction, with food, supplements, food products, or a food plan designed for clients from one or more healthy population groups, in order that such clients may achieve or maintain a healthy weight."
+}
+
+```
+
+400 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "Bad Request",
+    "status": 400,
+    "traceId": "00-8f90981c4e583dae5f47601990b157f9-4f0526eaca72988d-00"
+}
+```
+
+### PUT užklausa: {domain}/api/categories/{name}
+
+Reikalaujamos siuntimo argumentai:
+| Argumentas  | Reikšmėa |
+| ------------- | ------------- |
+| Description | kategorijos aprašymas |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sukurtas įrašas |
+| 401 | Neautorizuotas |
+| 404 | Nerastas |
+
+200 Atsako pavyzdys:
+```
+{
+    "name": "Lose weight",
+    "description": "Weight loss program means a general program of instruction, with food, supplements, food products, or a food plan designed for clients from one or more healthy population groups, in order that such clients may achieve or maintain a healthy weight."
+}
+```
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-f8daaea7b3edbc4bac182310c63b2b0b-0850cbd64b9a5871-00"
+}
+```
+
+### DELETE užklausa: {domain}/api/categories/{name}
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 204 | Sėkmingas ištrynimas |
+| 401 | Neautorizuotas |
+| 404 | Nerastas |
+
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-32fe7a58d0cf6c3ccd935e57e41825d0-2f9105ccd75d6c61-00"
+}
 ```
