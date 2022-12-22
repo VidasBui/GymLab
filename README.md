@@ -46,6 +46,6 @@ Naudotojo sąsajos projektas
 Navigacija
 | Wireframe  | Realizacija |
 | ------------- | ------------- |
-| ![image](https://user-images.githubusercontent.com/107630990/208947774-c1f0f52e-084e-4ec5-9269-7ece720688d8.png) | ![image](https://user-images.githubusercontent.com/107630990/208947977-4fc93a6d-c2bd-4b8b-b41f-6bf66817117e.png) | 
-![image](https://user-images.githubusercontent.com/107630990/208949634-28a27198-fdb4-423f-b934-f8df7c8ae120.png) | ![image](https://user-images.githubusercontent.com/107630990/208949724-99bb3e86-d4ca-47cd-9750-621e1dc3a562.png) |
-![image](https://user-images.githubusercontent.com/107630990/208950975-08b625bc-7e74-40fe-bcc6-1d6269b93249.png) | ![image](https://user-images.githubusercontent.com/107630990/208951042-8ed8a5d8-395c-4253-99ae-6f3f2c1e7f39.png) |
+| ![image](https://user-images.githubusercontent.com/107630990/209137836-d7bbcdde-010f-4bfc-ae39-1a06485fe371.png) | ![image](https://user-images.githubusercontent.com/107630990/208947977-4fc93a6d-c2bd-4b8b-b41f-6bf66817117e.png) | 
+![image](https://user-images.githubusercontent.com/107630990/209138011-f5c9019b-81b4-4eb8-b091-834ad76b2359.png) | ![image](https://user-images.githubusercontent.com/107630990/208949724-99bb3e86-d4ca-47cd-9750-621e1dc3a562.png) |
+![image](https://user-images.githubusercontent.com/107630990/209138546-4c5497a8-47a5-4094-b129-1809f0a8b04c.png) | ![image](https://user-images.githubusercontent.com/107630990/208951042-8ed8a5d8-395c-4253-99ae-6f3f2c1e7f39.png) |
