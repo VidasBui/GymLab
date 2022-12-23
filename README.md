@@ -75,7 +75,7 @@ Reikalaujamos siuntimo antraštės:
 | withCredentials | true |
 | Content-Type | application/json |
 
-## Panaudojimo pavyzdžiai
+## Categories panaudojimo pavyzdžiai
 
 ### GET užklausa: {domain}/api/categories
 
@@ -203,6 +203,181 @@ Galimi atsako kodai
 | ------------- | ------------- |
 | 204 | Sėkmingas ištrynimas |
 | 401 | Neautorizuotas |
+| 404 | Nerastas |
+
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-32fe7a58d0cf6c3ccd935e57e41825d0-2f9105ccd75d6c61-00"
+}
+```
+
+## SportProrgams panaudojimo pavyzdžiai
+
+### GET užklausa: {domain}/api/categories{categoryName}/sportPrograms
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sąrašas |
+
+Atsako pavyzdys:
+```
+[
+    {
+        "id": 5,
+        "type": 1,
+        "duration": 1,
+        "intensity": 1,
+        "description": "desc1",
+        "workout": "workout 1",
+        "score": 0
+    },
+    {
+        "id": 6,
+        "type": 3,
+        "duration": 1,
+        "intensity": 3,
+        "description": "30 minutes weight loss",
+        "workout": "1 Chest and Triceps | Back and Biceps | Rest Day/Cardio | Shoulders and Forearms | Legs | Rest | Rest",
+        "score": 0
+    }
+]
+```
+
+### GET užklausa: {domain}/api/categories{categoryName}/sportPrograms/{id}
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sąrašas |
+| 404 | Nerastas |
+
+200 Atsako pavyzdys:
+```
+{
+    "resource": {
+        "id": 5,
+        "type": 1,
+        "duration": 1,
+        "intensity": 1,
+        "description": "desc1",
+        "workout": "workout 1",
+        "score": 0
+    }
+}
+```
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-a6e11c19e5e31bd58b0de373c9fc8866-78a89b843e3bed8a-00"
+}
+```
+
+### POST užklausa: {domain}/api/categories/
+
+Reikalaujamos siuntimo argumentai:
+| Argumentas  | Reikšmėa |
+| ------------- | ------------- |
+| Type | sporto programos tipas |
+| Duration | sporto programos trukmė |
+| Intensity | sporto programos intensyvumas |
+| Description | sporto programos aprašymas |
+| Workout | sporto programa  |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 201 | Gražinamas sukurtas įrašas |
+| 401 | Neautorizuotas |
+| 400 | Blogi duomenys |
+
+201 Atsako pavyzdys:
+```
+{
+    "id": 7,
+    "type": 3,
+    "duration": 1,
+    "intensity": 3,
+    "description": "30 minutes weight loss",
+    "workout": "1 Chest and Triceps | Back and Biceps | Rest Day/Cardio | Shoulders and Forearms | Legs | Rest | Rest",
+    "score": 0
+}
+
+```
+
+400 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-01e36cf26b46fc711c243249a19992d3-e623612d355b2e57-00",
+    "errors": {
+        "dto": [
+            "The dto field is required."
+        ],
+        "$.Duration": [
+            "The JSON value could not be converted to GymLab.Data.Dtos.SportProgramDto. Path: $.Duration | LineNumber: 2 | BytePositionInLine: 19."
+        ]
+    }
+}
+```
+
+### PUT užklausa: {domain}/api/categories/{name}
+
+Reikalaujamos siuntimo argumentai:
+| Argumentas  | Reikšmėa |
+| ------------- | ------------- |
+| Description | kategorijos aprašymas |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sukurtas įrašas |
+| 401 | Neautorizuotas |
+| 403 | Uždraustas |
+| 404 | Nerastas |
+
+200 Atsako pavyzdys:
+```
+{
+    "id": 5,
+    "type": 2,
+    "duration": 4,
+    "intensity": 2,
+    "description": "THE 4-WEEK EXTREME FAT LOSS WORKOUT",
+    "workout": "1 Cardio | Full body | Cardio | Full body | Rest | Full body | Cardio | 2 Cardio | Full body | Cardio | Full body | Cardio | Full body | Cardio 3 Cardio | Full body | Cardio | Full body | Rest | Full body | Cardio 4 Cardio | Full body | Cardio | Full body | Cardio | Full body | Cardio",
+    "score": 0
+}
+```
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-b27ff046145cda1d17ead0803e313915-501ee350eecd6816-00"
+}
+```
+
+### DELETE užklausa: {domain}/api/categories/{name}
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 204 | Sėkmingas ištrynimas |
+| 401 | Neautorizuotas |
+| 401 | Uždraustas |
 | 404 | Nerastas |
 
 
