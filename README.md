@@ -607,3 +607,9 @@ Galimi atsako kodai
 ```
 User name or password is invalid
 ```
+
+### Projekto išvados
+
+  1. Įgyvendinti visi projekte numatyti funkciniai reikalavimai.
+  2. Projektuojamos sąsajos langai atinka jų wireframe'us. 
+  3. API specifikacija sudaryta remiantis TWITTER API specifikacijos pavyzdžiu.
