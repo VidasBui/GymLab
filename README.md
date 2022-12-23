@@ -282,7 +282,7 @@ Galimi atsako kodai
 }
 ```
 
-### POST užklausa: {domain}/api/categories/
+### POST užklausa: {domain}/api/categories/{name}/sportPrograms
 
 Reikalaujamos siuntimo argumentai:
 | Argumentas  | Reikšmėa |
@@ -332,12 +332,16 @@ Galimi atsako kodai
 }
 ```
 
-### PUT užklausa: {domain}/api/categories/{name}
+### PUT užklausa: {domain}/api/categories/{name}/sportPrograms/{id}
 
 Reikalaujamos siuntimo argumentai:
 | Argumentas  | Reikšmėa |
 | ------------- | ------------- |
-| Description | kategorijos aprašymas |
+| Type | sporto programos tipas |
+| Duration | sporto programos trukmė |
+| Intensity | sporto programos intensyvumas |
+| Description | sporto programos aprašymas |
+| Workout | sporto programa  |
 
 Galimi atsako kodai
 | Antraštė  | Reikšmė |
@@ -370,7 +374,7 @@ Galimi atsako kodai
 }
 ```
 
-### DELETE užklausa: {domain}/api/categories/{name}
+### DELETE užklausa: {domain}/api/categories/{name}/sportPrograms/{id}
 
 Galimi atsako kodai
 | Antraštė  | Reikšmė |
@@ -388,5 +392,161 @@ Galimi atsako kodai
     "title": "Not Found",
     "status": 404,
     "traceId": "00-32fe7a58d0cf6c3ccd935e57e41825d0-2f9105ccd75d6c61-00"
+}
+```
+
+## Ratings panaudojimo pavyzdžiai
+
+### GET užklausa: {domain}/api/categories{categoryName}/sportPrograms/{sportProgramId}/ratings
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sąrašas |
+
+Atsako pavyzdys:
+```
+[
+    {
+        "id": 5,
+        "comment": "great program!",
+        "evaluation": 5
+    },
+    {
+        "id": 6,
+        "comment": null,
+        "evaluation": 5
+    },
+    {
+        "id": 7,
+        "comment": null,
+        "evaluation": 3
+    }
+]
+```
+
+### GET užklausa: {domain}/api/categories{categoryName}/sportPrograms/{id}/{sportProgramId}/ratings/{ratingId}
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Gražinamas sąrašas |
+| 404 | Nerastas |
+
+200 Atsako pavyzdys:
+```
+{
+    "resource": {
+        "id": 5,
+        "comment": "great program!",
+        "evaluation": 5
+    }
+}
+```
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-26a9fb6454f0129612521598aa02dc64-7d58d78b934501cf-00"
+}
+```
+
+### POST užklausa: {domain}/api/categories/{name}/sportPrograms/{sportProgramId}/ratings
+
+Reikalaujami siuntimo argumentai:
+| Argumentas  | Reikšmė |
+| ------------- | ------------- |
+| Comment | komentaras |
+| Evaluation | sporto programos įvertinimas |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 201 | Gražinamas sukurtas įrašas |
+| 401 | Neautorizuotas |
+| 400 | Blogi duomenys |
+
+201 Atsako pavyzdys:
+```
+{
+    "id": 8,
+    "comment": "great program!",
+    "evaluation": 5
+}
+```
+
+400 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "00-01e36cf26b46fc711c243249a19992d3-e623612d355b2e57-00",
+    "errors": {
+        "dto": [
+            "The dto field is required."
+        ],
+        "$.Duration": [
+            "The JSON value could not be converted to GymLab.Data.Dtos.SportProgramDto. Path: $.Duration | LineNumber: 2 | BytePositionInLine: 19."
+        ]
+    }
+}
+```
+
+### PUT užklausa: {domain}/api/categories/{name}/sportPrograms/{id}/{sportProgramId}/ratings/{ratingId}
+
+Reikalaujami siuntimo argumentai:
+| Argumentas  | Reikšmė |
+| ------------- | ------------- |
+| Comment | komentaras |
+| Evaluation | sporto programos įvertinimas |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Grąžinamas sukurtas įrašas |
+| 401 | Neautorizuotas |
+| 403 | Uždraustas |
+| 404 | Nerastas |
+
+200 Atsako pavyzdys:
+```
+{
+    "id": 4,
+    "comment": "GREAT PROGRAM!",
+    "evaluation": 4
+}
+```
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-b27ff046145cda1d17ead0803e313915-501ee350eecd6816-00"
+}
+```
+
+### DELETE užklausa: {domain}/api/categories/{name}/sportPrograms/{id}/{sportProgramId}/ratings/{ratingId}
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 204 | Sėkmingas ištrynimas |
+| 401 | Neautorizuotas |
+| 401 | Uždraustas |
+| 404 | Nerastas |
+
+404 Atsako pavyzdys:
+```
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+    "title": "Not Found",
+    "status": 404,
+    "traceId": "00-6560670ef6892803ab98ba62a0c89793-6fcd7279f713bdf7-00"
 }
 ```
