@@ -550,3 +550,60 @@ Galimi atsako kodai
     "traceId": "00-6560670ef6892803ab98ba62a0c89793-6fcd7279f713bdf7-00"
 }
 ```
+
+## Users panaudojimo pavyzdžiai
+
+### POST užklausa: {domain}/api/register
+
+Reikalaujami siuntimo argumentai:
+| Argumentas  | Reikšmė |
+| ------------- | ------------- |
+| UserName | vartotojo slapyvardis |
+| Email | vartotojo elektroninis paštas |
+| Password | vartotojo slaptažodis |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 201 | Vartotojas sukurtas |
+| 400 | Blogi duomenys |
+
+200 Atsako pavyzdys:
+```
+{
+    "id": "3c2ed754-909e-4244-8366-aa4b8b50f25b",
+    "userName": "vidas4e",
+    "email": "vidas4f@gmail.com"
+}
+```
+
+400 Atsako pavyzdys:
+```
+User with this name already exists!
+```
+
+### POST užklausa: {domain}/api/login
+
+Reikalaujami siuntimo argumentai:
+| Argumentas  | Reikšmė |
+| ------------- | ------------- |
+| UserName | vartotojo slapyvardis |
+| Password | vartotojo slaptažodis |
+
+Galimi atsako kodai
+| Antraštė  | Reikšmė |
+| ------------- | ------------- |
+| 200 | Sėkmingas prisijungimas |
+| 400 | Blogi duomenys |
+
+200 Atsako pavyzdys:
+```
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJqdGkiOiIxOTk2ODcyOC01YmFjLTQyNjgtYjNjYy1jZWM5ODQ3MjU0YTEiLCJzdWIiOiIzOGU2NTA2Ni0wOTBjLTQyYmYtYTdmNy0wMzI2NjZmZjA1ZTUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiRm9ydW1Vc2VyIiwiQWRtaW4iXSwiZXhwIjoxNjcxNzkzMjQ3LCJpc3MiOiJWaWRhcyIsImF1ZCI6IlRydXN0ZWRDbGllbnQifQ.A_-wID12myETXO9EFrhGdEEGPFqcAbAbAffgLMqnmSU"
+}
+```
+
+400 Atsako pavyzdys:
+```
+User name or password is invalid
+```
